@@ -16,18 +16,23 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ############################################################################
-"""
-	Filename:	_gen_types.py
+"""	Filename:	_gen_types.py
 	Last update:	04/06/2010
 	Purpose:	Parse rsbac header, write python dictionary
 
-give it rsbac headers directory as unique parameter
+This is a standalone programe, give it rsbac headers directory as unique parameter.
+Main methods:
+	gen_init	: read headers files once
+	gen_initfile	: prepare new file and return file object
+	gen_simple	: match against regexp
+	gen_multi	: first group lines of intereset, then match agains regexp
+	gen_types	: main function
+	main		: usage function
 """
 import sys,os
 import time
 import re
-# INDEV: developpement mode (exception throwing, debug output, ...)
-INDEV=True
+from rsbac.tools import *
 
 # files_content: rsbac header files readlines() dictionary
 files_content = {}
@@ -46,9 +51,14 @@ def gen_initfile(filename):
 		if os.path.isfile("%s.ori" % filename):
 			raise RuntimeError("please backup *.ori files, (%s.ori)" % filename)
 		os.rename(filename, "%s.ori" % filename)
+	print "[+] -> %s" % filename,
 	output = open(filename, "w+")
 	output.write(files_content["header"] % (filename, time.strftime("%Y/%m/%d")))
 	return output
+def gen_endfile(output):
+	output.write("# %s EOF\n" % output.name)
+	print "\t%s%d bytes written%s" % (bcolors.OKBLUE, output.tell(), bcolors.ENDC)
+	output.close()
 
 def gen_simple(filename, regexp, dic_name, headername = "types.h"):
 	output = gen_initfile(filename)
@@ -60,8 +70,7 @@ def gen_simple(filename, regexp, dic_name, headername = "types.h"):
 			continue
 		output.write("\t'%s':\t%s,\n" % m.groups())
 	output.write("}\n\n")
-	output.write("# %s EOF\n" % filename)
-	output.close()
+	gen_endfile(output)
 
 def gen_multi(filename, enum, enum_prefix, dic_name, headername = "types.h"):
 	output = gen_initfile(filename)
@@ -85,16 +94,17 @@ def gen_multi(filename, enum, enum_prefix, dic_name, headername = "types.h"):
 		output.write("\t'%s':\t%s,\n" % (enum.replace(enum_prefix, "").strip(), i))
 		i += 1
 	output.write("}\n\n")
-	output.write("# %s EOF\n" % filename)
-	output.close()
+	gen_endfile(output)
 
 def gen_types(base_dir):
 	"""_gen_types.py main function"""
+	print "[+] Generating rsbac python types"
 	gen_init(base_dir)
 	gen_simple("jail.py", "^#define[ \t]+JAIL_([a-z_]+)[ \t]+([0-9]+)$", "jail_flags")
 	gen_simple("cap.py", "^#define[ \t]+CAP_([a-zA-Z_]+)[ \t]+([0-9]+)$", "caps",
 		headername = "capability.h")
 	gen_multi("scd.py", "rsbac_scd_type_t", "ST_", "scd")
+	print "[+] %sdone%s" % (bcolors.OKGREEN, bcolors.ENDC)
 
 def main():
 	"""usage"""

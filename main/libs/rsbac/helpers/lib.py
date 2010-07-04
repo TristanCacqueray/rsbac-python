@@ -16,26 +16,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ############################################################################
+"""	Filename:	lib.py
+	Last update:	2010/07/05
+	Purpose:	librsbac.so ctype loader
+
+
 """
-	Filename:	run-jail.py
-	Last update:	04/06/2010
-	Purpose:	replace rsbac_jail legacy tool
+from ctypes import *
 
-It feature: jail configuration files and auto-jailling with symlinks
-"""
-
-from rsbac.types import *
-from rsbac.helpers import *
-
-print jail_flags
 try:
-	rsbac_jail("import test 1")
-except RuntimeError:
-	pass
-
-
-import rsbac.helpers.jail
-try:
-	rsbac.helpers.jail.rsbac_jail("import test2")
-except RuntimeError:
-	pass
+	librsbac = cdll.LoadLibrary("librsbac.so.1")
+except OSError:
+	import sys
+	print >>sys.stderr, "Could not find librsbac.so.1"

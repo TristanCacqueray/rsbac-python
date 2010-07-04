@@ -6,5 +6,3 @@ __version__ = Release.version
 __version_number__ = Release.version_number
 __version_description__  = Release.version_description
 __doc__ = Release.long_description
-
-import types

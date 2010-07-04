@@ -1,6 +1,8 @@
 try:
 	from jail import *
-	from rc import *
+	from cap import *
+	from scd import *
 except ImportError:
-	print "Rsbac types must be generate manualy..."
-	print "Goto rsbac/types python modules and run _gen_types.py"
+	from rsbac.tools import bcolors
+	print "%s[E] Rsbac types must be generate manualy..." % bcolors.FAIL
+	print "[E] Goto %s and run _gen_types.py%s" % (__path__, bcolors.ENDC)

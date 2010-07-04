@@ -1,18 +1,20 @@
 Welcome to the RSBAC python packages directory
 ----------------------------------------------
 
-This project is in developpement:
+rsbac-python is RSBAC userland tools, but in pure python
+This project is in developpement.
 
 Directories layout
 ------------------
-contrib/		external contribution are welcome
-main/			code sources
-|->/daemon/		daemontools run scripts
-|->/tools/		this are the new tool you can use to replace rsbac-admin's commande
-|->/libs/rsbac/		this are the shared code between tools
-|        |->/binding	this is the RSBAC api
+contrib			external contribution are welcome
+main			project code sources
+|->/daemon		daemontools run scripts
+|->/tools		the new tool you can use to replace rsbac-admin's commande
+|->/libs/rsbac		the shared code between tools
+|        |->/types	RSBAC generated types for helpers
+|        |->/helpers	librsbac.so wrapper
 |        \->/tools	the usual toolbox
-\->/docs
+\->/docs		notes, doxygen outputs
 
 
 Key concepts
