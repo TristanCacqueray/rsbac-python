@@ -4,13 +4,14 @@ Welcome to the RSBAC python packages directory
 rsbac-python is RSBAC userland tools, but in pure python
 This project is in developpement.
 
+
 Directories layout
 ------------------
-contrib                 external contribution are welcome
+
+contrib                 external contributions are welcome
 main                    project code sources
-|->/daemon              daemontools run scripts
-|->/tools               the new tool you can use to replace rsbac-admin's commande
-|->/libs/rsbac          the shared code between tools
+|->/tools               new tools to replace rsbac-admin's commands
+|->/libs/rsbac          shared code between tools
 |        |->/types      RSBAC generated types for helpers
 |        |->/helpers    librsbac.so wrapper
 |        \->/tools      the usual toolbox
@@ -31,11 +32,11 @@ Key concepts
 	- auto-jailling feature with symlinks
 	- jail configuration in plain text, imported from adamantix project
 
-* create_policy, a tool to generate a standalone policy.xml
-	- use help from rsbac learning modes output
 
+Security policy description
+---------------------------
 
-* load_policy, a tool to apply a policy.xml
+* generic syntax, xml or .ini style, featuring:
 	- Manager for names to id (creation if it does not exist):
 		Rc_Type["BIN_FD"]
 	- RC role template inheritance
@@ -43,14 +44,39 @@ Key concepts
 	- RC type callback, a role can register a callback on new rc type creation
 		ie: secoff (READ/MODIFY ATTRIBUTES), datoff (READ)
 
+* default security policy:
+	- provide description, ala sec-policy/* in gentoo portage
+	- ready to use
+
+
+New userland tools
+------------------
+
+* create_policy, a tool to generate a standalone policy.xml
+	- use help from rsbac learning modes output
+	- GUI (tkInter, pyopengl, whatever...)
+	- strace like learning mode
+
+* load_policy, a tool to apply a policy
+	- check for package update, and reapply inode attributes
+	- could be called in package's postinstall
+
+
+Bonus tools
+-----------
+
 * util-linux with rsbac attributes awarness:
 	- ps, ls, id, who, htop
 	- Show attributes name, not numbers
+
+* legacy userland tools rewrite in python
+	- attr_get_*, attr_set_*, ...
+	- smaller code, better error handling
 
 * daemontools startup scripts and default policy for standard packages (sec-policy/selinux-*):
 	- supervise can be control by a simple file, making service administration easer:
 		- low environment polution
 		- user controlable even without rsbac
 		- restart on crash
-	- generic "secured" auto configuration if it does not exist.
+	- generic hardened auto configuration if it does not exist.
 
