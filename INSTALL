@@ -1,0 +1,35 @@
+RSBAC python packages Installation
+----------------------------------
+
+Prerequisites
+-------------
+
+You need to instal the following packages before you can continue:
+ - python-2.6
+
+
+Installation
+------------
+
+Copy/symlinks tools (main/tools/*) in your PATH.
+
+Copy/symlinks libs (main/libs/*) in your '>>> sys.path'
+
+Examples:
+
+	for i in $(pwd)/main/tools/*.py; do
+		ln -s $i /usr/local/bin;
+	done
+
+	for i in $(pwd)/main/libs/*; do
+		ln -s $i /usr/lib/python2.6/site-packages/
+	done
+
+
+Developpers Note
+----------------
+
+Quick tests can be perform by setting your environment:
+
+export PATH=${PATH}:$(pwd)/main/tools
+export PYTHONPATH=${PYTHONPATH}:$(pwd)/main/libs
