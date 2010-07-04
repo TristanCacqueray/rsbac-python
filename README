@@ -6,15 +6,15 @@ This project is in developpement.
 
 Directories layout
 ------------------
-contrib			external contribution are welcome
-main			project code sources
-|->/daemon		daemontools run scripts
-|->/tools		the new tool you can use to replace rsbac-admin's commande
-|->/libs/rsbac		the shared code between tools
-|        |->/types	RSBAC generated types for helpers
-|        |->/helpers	librsbac.so wrapper
-|        \->/tools	the usual toolbox
-\->/docs		notes, doxygen outputs
+contrib                 external contribution are welcome
+main                    project code sources
+|->/daemon              daemontools run scripts
+|->/tools               the new tool you can use to replace rsbac-admin's commande
+|->/libs/rsbac          the shared code between tools
+|        |->/types      RSBAC generated types for helpers
+|        |->/helpers    librsbac.so wrapper
+|        \->/tools      the usual toolbox
+\->/docs                notes, doxygen outputs
 
 
 Key concepts
