@@ -32,9 +32,12 @@ INDEV=True
 # files_content: rsbac header files readlines() dictionary
 files_content = {}
 
+LINUX_CAP_FILE="/usr/include/linux/capability.h"
+
 def gen_init(base_dir):
 	"""Prepare generation: read rsbac headers in global files_contents dictionary"""
 	files_content["types.h"] = open("%s/types.h" % base_dir).readlines()
+	files_content["capability.h"] = open(LINUX_CAP_FILE).readlines()
 	files_content["header"] = open("_template_header.txt").read()
 
 def gen_initfile(filename):
@@ -47,25 +50,51 @@ def gen_initfile(filename):
 	output.write(files_content["header"] % (filename, time.strftime("%Y/%m/%d")))
 	return output
 
-def gen_jail_types(filename):
+def gen_simple(filename, regexp, dic_name, headername = "types.h"):
 	output = gen_initfile(filename)
-	jail_flags_re = re.compile("^#define[ \t]+JAIL_([a-z_]+)[ \t]+([0-9]+)$")
-	output.write("jail_flags = {\n")
-	for line in files_content["types.h"]:
-		m = jail_flags_re.match(line)
+	pat_re = re.compile(regexp)
+	output.write("%s = {\n" % dic_name)
+	for line in files_content[headername]:
+		m = pat_re.match(line)
 		if not m:
 			continue
-		output.write("\t'%s': %s,\n" % m.groups())
+		output.write("\t'%s':\t%s,\n" % m.groups())
 	output.write("}\n\n")
 	output.write("# %s EOF\n" % filename)
 	output.close()
 
-		
+def gen_multi(filename, enum, enum_prefix, dic_name, headername = "types.h"):
+	output = gen_initfile(filename)
+	# first make one string for all enum
+	enum_string = ""
+	for line in files_content[headername]:
+		if line.startswith("enum") and line.find("%s {" % enum) != -1:
+			s_idx = files_content[headername].index(line)
+			e_idx = s_idx + 20
+			enum_string = " ".join(files_content[headername][s_idx:e_idx])
+			break
+	# then extract enum names
+	pat_re = re.compile("enum[ \t]+%s[ \t]+{([^}]+)}" % enum, re.MULTILINE)
+	m = pat_re.match(enum_string)
+	if not m:
+		raise RuntimeError("Could not parse %s" % enum)
+	# for each enum, write name and position
+	output.write("%s = {\n" % dic_name)
+	i = 0
+	for enum in m.groups()[0].replace('\n', '').split(','):
+		output.write("\t'%s':\t%s,\n" % (enum.replace(enum_prefix, "").strip(), i))
+		i += 1
+	output.write("}\n\n")
+	output.write("# %s EOF\n" % filename)
+	output.close()
 
 def gen_types(base_dir):
 	"""_gen_types.py main function"""
 	gen_init(base_dir)
-	gen_jail_types("jail.py")
+	gen_simple("jail.py", "^#define[ \t]+JAIL_([a-z_]+)[ \t]+([0-9]+)$", "jail_flags")
+	gen_simple("cap.py", "^#define[ \t]+CAP_([a-zA-Z_]+)[ \t]+([0-9]+)$", "caps",
+		headername = "capability.h")
+	gen_multi("scd.py", "rsbac_scd_type_t", "ST_", "scd")
 
 def main():
 	"""usage"""
@@ -73,7 +102,9 @@ def main():
 		rsbac_header_dir = str(sys.argv[1])
 		if not os.path.isdir(rsbac_header_dir) or len(sys.argv) != 2:
 			raise RuntimeError("Unknown params: %s" % " ".join(sys.argv[1:]))
-
+		if not os.path.isfile(LINUX_CAP_FILE):
+			raise RuntimeError("%s does not exist, please fixe" %
+						LINUX_CAP_FILE)
 		gen_types(rsbac_header_dir)
 
 	except IndexError:
