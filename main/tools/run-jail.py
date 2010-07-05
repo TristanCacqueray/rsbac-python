@@ -16,8 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ############################################################################
-"""
-	Filename:	run-jail.py
+"""	Filename:	run-jail.py
 	Last update:	04/06/2010
 	Purpose:	replace rsbac_jail legacy tool
 
