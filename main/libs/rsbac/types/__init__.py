@@ -2,7 +2,9 @@
 # -*- coding: utf8 -*-
 
 try:
-	from module import *
+	from modules import *
+	from targets import *
+	from attrs import *
 	from jail import *
 	from cap import *
 	from scd import *

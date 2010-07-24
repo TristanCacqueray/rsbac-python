@@ -53,7 +53,7 @@ def gen_initfile(filename):
 		if os.path.isfile("%s.ori" % filename):
 			raise RuntimeError("please backup *.ori files, (%s.ori)" % filename)
 		os.rename(filename, "%s.ori" % filename)
-	print "[+] -> %s" % filename,
+	print "[+] -> %s" % format(filename, "15s"),
 	output = open(filename, "w+")
 	output.write(files_content["header"] % (filename, time.strftime("%Y/%m/%d")))
 	return output
@@ -79,13 +79,13 @@ def gen_multi(filename, enum, enum_prefix, dic_name, headername = "types.h"):
 	# first make one string for all enum
 	enum_string = ""
 	for line in files_content[headername]:
-		if line.startswith("enum") and line.find("%s {" % enum) != -1:
+		if line.startswith("enum") and line.find("%s" % enum) != -1:
 			s_idx = files_content[headername].index(line)
-			e_idx = s_idx + 20
+			e_idx = s_idx + 500
 			enum_string = " ".join(files_content[headername][s_idx:e_idx])
 			break
 	# then extract enum names
-	pat_re = re.compile("enum[ \t]+%s[ \t]+{([^}]+)}" % enum, re.MULTILINE)
+	pat_re = re.compile("enum[ \t]+%s[ \t\n]+{([^}]+)}" % enum, re.MULTILINE)
 	m = pat_re.match(enum_string)
 	if not m:
 		raise RuntimeError("Could not parse %s" % enum)
@@ -93,6 +93,8 @@ def gen_multi(filename, enum, enum_prefix, dic_name, headername = "types.h"):
 	output.write("%s = {\n" % dic_name)
 	i = 0
 	for enum in m.groups()[0].replace('\n', '').split(','):
+		if enum.strip().startswith('#ifdef __KERNEL__'):
+			break
 		output.write("\t'%s':\t%s,\n" % (enum.replace(enum_prefix, "").strip(), i))
 		i += 1
 	output.write("}\n\n")
@@ -107,6 +109,8 @@ def gen_types(base_dir):
 		headername = "capability.h")
 	gen_multi("scd.py", "rsbac_scd_type_t", "ST_", "scd")
 	gen_multi("modules.py", "rsbac_switch_target_t", "SW_", "modules")
+	gen_multi("targets.py", "rsbac_target_t", "T_", "targets")
+	gen_multi("attrs.py", "rsbac_attribute_t", "A_", "attrs")
 	print "[+] %sdone%s" % (bcolors.OKGREEN, bcolors.ENDC)
 
 def main():

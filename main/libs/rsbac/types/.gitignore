@@ -2,4 +2,6 @@ cap.py
 jail.py
 scd.py
 modules.py
+targets.py
+attrs.py
 *.py.ori
