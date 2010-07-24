@@ -4,5 +4,5 @@ scd.py
 modules.py
 targets.py
 attrs.py
-error.py
+errors.py
 *.py.ori

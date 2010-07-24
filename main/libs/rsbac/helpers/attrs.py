@@ -41,7 +41,14 @@ def rsbac_get_attr_n(module,		# __u8
 #	print "calling rsbac_get_attr_n(%d, %d, %d, %s, %d, %s, %d)" % rsys_param
 	ret = librsbac.rsbac_get_attr_n(*rsys_param)
 	if ret < 0:
-		raise RuntimeError("rsbac_get_attr_n() failled with %d" % ret)
+		raise RsbacError("rsbac_get_attr_n(): module %s, attr %s, path %s" %
+			(
+				get_module_name(module),
+				get_attr_name(attr),
+				name,
+			),
+			ret
+		)
 	return value.contents.value
 
 

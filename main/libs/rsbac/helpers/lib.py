@@ -31,3 +31,32 @@ try:
 except OSError:
 	import sys
 	print >>sys.stderr, "Could not find librsbac.so.1"
+
+def get_name(dic, key):
+	if key not in dic.keys():
+		return "UNKNOWN"
+	return dic[key]
+
+def get_error_name(errno):
+	from rsbac.types.errors import errors_names
+	return get_name(errors_names, abs(errno))
+
+def get_attr_name(attr):
+	from rsbac.types.attrs import attrs_names
+	return get_name(attrs_names, attr)
+
+def get_module_name(module):
+	from rsbac.types.modules import modules_names
+	return get_name(modules_names, module)
+
+class RsbacError(Exception):
+	def __init__(self, msg, errno):
+		self.msg = msg
+		self.errno = errno
+	def __str__(self):
+		return "%s, FAILLED. return value = %d (%s)" % (
+			self.msg,
+			self.errno,
+			get_error_name(self.errno),
+		)
+

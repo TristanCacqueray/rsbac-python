@@ -59,7 +59,7 @@ def gen_initfile(filename):
 	output.write(files_content["header"] % (filename, time.strftime("%Y/%m/%d")))
 	return output
 def gen_endfile(output):
-	output.write("# %s EOF\n" % output.name)
+	output.write("\n# %s EOF\n" % output.name)
 	print "\t%s%d bytes written%s" % (bcolors.OKBLUE, output.tell(), bcolors.ENDC)
 	output.close()
 
@@ -72,7 +72,10 @@ def gen_simple(filename, regexp, dic_name, headername = "types.h"):
 		if not m:
 			continue
 		output.write("\t'%s':\t%s,\n" % m.groups())
-	output.write("}\n\n")
+	output.write("}\n")
+	output.write("%s_names = dict((v,k) for k, v in %s.iteritems())\n" %
+			(dic_name, dic_name)
+	)
 	gen_endfile(output)
 
 def gen_multi(filename, enum, enum_prefix, dic_name, headername = "types.h"):
@@ -98,7 +101,10 @@ def gen_multi(filename, enum, enum_prefix, dic_name, headername = "types.h"):
 			break
 		output.write("\t'%s':\t%s,\n" % (enum.replace(enum_prefix, "").strip(), i))
 		i += 1
-	output.write("}\n\n")
+	output.write("}\n")
+	output.write("%s_names = dict((v,k) for k, v in %s.iteritems())\n" %
+			(dic_name, dic_name)
+	)
 	gen_endfile(output)
 
 def gen_types(base_dir):
