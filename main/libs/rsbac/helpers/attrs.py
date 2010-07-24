@@ -55,7 +55,7 @@ def rsbac_get_attr_n(module,		# __u8
 def get(path):
 	path_attrs = {}
 	for module in modules.keys():
-		if module not in module_attrs:
+		if module not in module_attrs or module not in active_modules:
 			continue
 		path_attrs[module] = {}
 		for attr in module_attrs[module]:

@@ -30,7 +30,26 @@ try:
 	librsbac = cdll.LoadLibrary("librsbac.so.1")
 except OSError:
 	import sys
-	print >>sys.stderr, "Could not find librsbac.so.1"
+	raise RuntimeError("Could not find librsbac.so.1")
+
+def rsbac_check():
+	import os.path
+	if not os.path.exists("/proc/rsbac-info/active"):
+		raise RuntimeError("CONFIG_RSBAC_PROC must be enable.")
+	return True
+
+if not rsbac_check():
+	raise RuntimeError("Rsbac must be active to use this package.")
+
+active_modules = set()
+
+def load_active_module():
+	for line in open("/proc/rsbac-info/active").readlines():
+		if line.startswith("Module: "):
+			active_modules.add(line.split()[1])
+	print "Debug: %s active module detected" % active_modules
+load_active_module()
+
 
 def get_name(dic, key):
 	if key not in dic.keys():
