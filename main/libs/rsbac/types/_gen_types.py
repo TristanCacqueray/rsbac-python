@@ -44,6 +44,7 @@ LINUX_CAP_FILE="/usr/include/linux/capability.h"
 def gen_init(base_dir):
 	"""Prepare generation: read rsbac headers in global files_contents dictionary"""
 	files_content["types.h"] = open("%s/types.h" % base_dir).readlines()
+	files_content["error.h"] = open("%s/error.h" % base_dir).readlines()
 	files_content["capability.h"] = open(LINUX_CAP_FILE).readlines()
 	files_content["header"] = open("_template_header.txt").read()
 
@@ -104,6 +105,8 @@ def gen_types(base_dir):
 	"""_gen_types.py main function"""
 	print "[+] Generating rsbac python types"
 	gen_init(base_dir)
+	gen_simple("errors.py", "^#define[ \t]+RSBAC_([a-zA-Z_]+)[ \t]+([0-9]+)$", "errors",
+		headername = "error.h")
 	gen_simple("jail.py", "^#define[ \t]+JAIL_([a-z_]+)[ \t]+([0-9]+)$", "jail_flags")
 	gen_simple("cap.py", "^#define[ \t]+CAP_([a-zA-Z_]+)[ \t]+([0-9]+)$", "caps",
 		headername = "capability.h")

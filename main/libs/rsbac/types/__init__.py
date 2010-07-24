@@ -2,6 +2,7 @@
 # -*- coding: utf8 -*-
 
 try:
+	from errors import *
 	from modules import *
 	from targets import *
 	from attrs import *
