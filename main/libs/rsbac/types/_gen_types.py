@@ -19,7 +19,7 @@
 ############################################################################
 """	Filename:	main/libs/rsbac/types/_gen_types.py
 	Project:	rsbac-python
-	Last update:	04/06/2010
+	Last update:	2010/07/24
 	Purpose:	Parse rsbac header, write python dictionary
 
 This is a standalone programe, give it rsbac headers directory as unique parameter.
@@ -106,6 +106,7 @@ def gen_types(base_dir):
 	gen_simple("cap.py", "^#define[ \t]+CAP_([a-zA-Z_]+)[ \t]+([0-9]+)$", "caps",
 		headername = "capability.h")
 	gen_multi("scd.py", "rsbac_scd_type_t", "ST_", "scd")
+	gen_multi("modules.py", "rsbac_switch_target_t", "SW_", "modules")
 	print "[+] %sdone%s" % (bcolors.OKGREEN, bcolors.ENDC)
 
 def main():

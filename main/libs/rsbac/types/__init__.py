@@ -2,6 +2,7 @@
 # -*- coding: utf8 -*-
 
 try:
+	from module import *
 	from jail import *
 	from cap import *
 	from scd import *
