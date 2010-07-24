@@ -1,4 +1,5 @@
 #!/usr/bin/python -OO
+# -*- coding: utf8 -*-
 ############################################################################
 # (c) 2005-2010 freenode#rsbac 
 #
@@ -16,11 +17,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ############################################################################
-"""	Filename:	lib.py
+"""	Filename:	main/libs/rsbac/helpers/lib.py
+	Project:	rsbac-python
 	Last update:	2010/07/05
 	Purpose:	librsbac.so ctype loader
 
-
+Documentation
 """
 from ctypes import *
 

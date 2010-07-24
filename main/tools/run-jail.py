@@ -1,6 +1,7 @@
 #!/usr/bin/python -OO
+# -*- coding: utf8 -*-
 ############################################################################
-# (c) 2005-2010 freenode#rsbac 
+# (c) 2005-2010 freenode#rsbac
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +17,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ############################################################################
-"""	Filename:	run-jail.py
+"""	Filename:	main/tools/run-jail.py
+	Project:	rsbac-python
 	Last update:	04/06/2010
 	Purpose:	replace rsbac_jail legacy tool
 
@@ -24,17 +26,24 @@ It feature: jail configuration files and auto-jailling with symlinks
 """
 
 from rsbac.types import *
-from rsbac.helpers import *
 
-print jail_flags
-try:
-	rsbac_jail("import test 1")
-except RuntimeError:
-	pass
+## Possible import technique
+#from rsbac.helpers import *
+#try:
+#	rsbac_jail("import test 1")
+#except RuntimeError:
+#	pass
 
 
+## Recommenced import
 import rsbac.helpers.jail
-try:
-	rsbac.helpers.jail.rsbac_jail("import test2")
-except RuntimeError:
-	pass
+
+def main(argv):
+	try:
+		rsbac.helpers.jail.rsbac_jail("import test2")
+	except RuntimeError:
+		pass
+
+if __name__ == "__main__":
+	import sys
+	sys.exit(main(sys.argv))

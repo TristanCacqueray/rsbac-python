@@ -1,6 +1,7 @@
 #!/usr/bin/python -OO
+# -*- coding: utf8 -*-
 ############################################################################
-# (c) 2005-2010 freenode#rsbac 
+# (c) 2005-2010 freenode#rsbac
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,11 +17,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ############################################################################
-"""	Filename:	jail.py
+"""	Filename:	main/libs/rsbac/helpers/jail.py
+	Project:	rsbac-python
 	Last update:	2010/07/05
 	Purpose:	rsbac_jail helpers
 
-
+Documentation
 """
 from rsbac.helpers.lib import *
 from rsbac.types import *

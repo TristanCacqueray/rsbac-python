@@ -1,3 +1,5 @@
+#!/usr/bin/python -OO
+# -*- coding: utf8 -*-
 
 # INDEV: developpement mode (exception throwing, debug output, ...)
 INDEV=True

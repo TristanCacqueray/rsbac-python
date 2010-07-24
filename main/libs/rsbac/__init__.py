@@ -1,3 +1,6 @@
+#!/usr/bin/python -OO
+# -*- coding: utf8 -*-
+
 from release import Release
 
 __author__ = "\n".join([ "%s <%s>" % x for x in Release.authors.values()])

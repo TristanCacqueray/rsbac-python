@@ -1,3 +1,6 @@
+#!/usr/bin/python -OO
+# -*- coding: utf8 -*-
+
 try:
 	from jail import *
 	from cap import *

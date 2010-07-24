@@ -1,6 +1,7 @@
 #!/usr/bin/python -OO
+# -*- coding: utf8 -*-
 ############################################################################
-# (c) 2005-2010 freenode#rsbac 
+# (c) 2005-2010 freenode#rsbac
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +17,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ############################################################################
-"""	Filename:	_gen_types.py
+"""	Filename:	main/libs/rsbac/types/_gen_types.py
+	Project:	rsbac-python
 	Last update:	04/06/2010
 	Purpose:	Parse rsbac header, write python dictionary
 

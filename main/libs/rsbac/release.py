@@ -1,14 +1,18 @@
+#!/usr/bin/python -OO
+# -*- coding: utf8 -*-
+
 class Release:
     """
         Release information:
             - name : (str) package name
-            - version_info : (tuple<int,int,int,str,int>) The five components of the version number: major, minor, micro, releaselevel, and serial.
+            - version_info : (tuple<int,int,int,str,int>) components of the version number:
+                              major, minor, micro, releaselevel, and serial.
             - version : (str) package version in format x.y.z
             - version_description : (str) short description for the current version
             - version_number : (int) x*100 + y*10 + z
             - description : (str) package description
             - long_description : (str) longer package description
-            - authors : (dict<str(last name), tuple<str(full name),str(email)>>) package authors
+            - authors : (dict<str(last name), tuple<str(full name),str(email)>>)
             - url : (str) package url
             - download_url : (str) package download url
             - platform : (seq<str>) list of available platforms
