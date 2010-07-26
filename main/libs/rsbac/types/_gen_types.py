@@ -26,8 +26,8 @@ This is a standalone programe, give it rsbac headers directory as unique paramet
 Main methods:
 	gen_init	: read headers files once
 	gen_initfile	: prepare new file and return file object
-	gen_simple	: match against regexp
-	gen_multi	: first group lines of intereset, then match agains regexp
+	gen_define	: match against regexp
+	gen_enum	: first group lines of intereset, then match agains regexp
 	gen_types	: main function
 	main		: usage function
 """
@@ -49,7 +49,7 @@ def gen_init(base_dir):
 	files_content["header"] = open("_template_header.txt").read()
 
 def gen_initfile(filename):
-	"""Prepare singel generation: check if files does not exist, then add header"""
+	"""Prepare single generation: check if files does not exist, then add header"""
 	if os.path.isfile(filename):
 		if os.path.isfile("%s.ori" % filename):
 			raise RuntimeError("please backup *.ori files, (%s.ori)" % filename)
@@ -63,23 +63,40 @@ def gen_endfile(output):
 	print "\t%s%d bytes written%s" % (bcolors.OKBLUE, output.tell(), bcolors.ENDC)
 	output.close()
 
-def gen_simple(filename, regexp, dic_name, headername = "types.h"):
-	output = gen_initfile(filename)
+def get_output(fileobj):
+	if isinstance(fileobj, str):
+		# fileobj can be a path str if it contains a single dictionary
+		output = gen_initfile(fileobj)
+	else:
+		# or an already opened file if it contains multiple dictionary
+		output = fileobj
+
+def gen_define(fileobj, regexp, dic_name, headername = "types.h", start_pattern = None):
+	output = get_output(fileobj)
 	pat_re = re.compile(regexp)
 	output.write("%s = {\n" % dic_name)
+	start_pattern_finded = False
 	for line in files_content[headername]:
+		if start_pattern and not start_pattern_finded:
+			if not line.startswith(start_pattern):
+				continue
+			start_pattern_finded = True
+			continue
 		m = pat_re.match(line)
+		if start_pattern and not m:
+			break
 		if not m:
 			continue
 		output.write("\t'%s':\t%s,\n" % m.groups())
 	output.write("}\n")
-	output.write("%s_names = dict((v,k) for k, v in %s.iteritems())\n" %
+	output.write("%s_names = dict((v,k) for k, v in %s.iteritems())\n\n" %
 			(dic_name, dic_name)
 	)
-	gen_endfile(output)
+	if isinstance(fileobj, str):
+		gen_endfile(output)
 
-def gen_multi(filename, enum, enum_prefix, dic_name, headername = "types.h"):
-	output = gen_initfile(filename)
+def gen_enum(fileobj, enum, enum_prefix, dic_name, headername = "types.h"):
+	output = get_output(fileobj)
 	# first make one string for all enum
 	enum_string = ""
 	for line in files_content[headername]:
@@ -102,24 +119,38 @@ def gen_multi(filename, enum, enum_prefix, dic_name, headername = "types.h"):
 		output.write("\t'%s':\t%s,\n" % (enum.replace(enum_prefix, "").strip(), i))
 		i += 1
 	output.write("}\n")
-	output.write("%s_names = dict((v,k) for k, v in %s.iteritems())\n" %
+	output.write("%s_names = dict((v,k) for k, v in %s.iteritems())\n\n" %
 			(dic_name, dic_name)
 	)
-	gen_endfile(output)
+	if isinstance(fileobj, str):
+		gen_endfile(output)
 
 def gen_types(base_dir):
 	"""_gen_types.py main function"""
 	print "[+] Generating rsbac python types"
 	gen_init(base_dir)
-	gen_simple("errors.py", "^#define[ \t]+RSBAC_([a-zA-Z_]+)[ \t]+([0-9]+)$", "errors",
+	gen_define("errors.py", "^#define[ \t]+RSBAC_([a-zA-Z_]+)[ \t]+([0-9]+)$", "errors",
 		headername = "error.h")
-	gen_simple("jail.py", "^#define[ \t]+JAIL_([a-z_]+)[ \t]+([0-9]+)$", "jail_flags")
-	gen_simple("cap.py", "^#define[ \t]+CAP_([a-zA-Z_]+)[ \t]+([0-9]+)$", "caps",
+	gen_define("jail.py", "^#define[ \t]+JAIL_([a-z_]+)[ \t]+([0-9]+)$", "jail_flags")
+	gen_define("cap.py", "^#define[ \t]+CAP_([a-zA-Z_]+)[ \t]+([0-9]+)$", "caps",
 		headername = "capability.h")
-	gen_multi("scd.py", "rsbac_scd_type_t", "ST_", "scd")
-	gen_multi("modules.py", "rsbac_switch_target_t", "SW_", "modules")
-	gen_multi("targets.py", "rsbac_target_t", "T_", "targets")
-	gen_multi("attrs.py", "rsbac_attribute_t", "A_", "attrs")
+	gen_enum("scd.py", "rsbac_scd_type_t", "ST_", "scd")
+	gen_enum("modules.py", "rsbac_switch_target_t", "SW_", "modules")
+	gen_enum("targets.py", "rsbac_target_t", "T_", "targets")
+	gen_enum("attrs.py", "rsbac_attribute_t", "A_", "attrs")
+	gen_enum("auth.py", "rsbac_auth_may_setuid_t", "AMS_", "auth_may_setuid_values")
+
+	gen_define("ff.py", "^#define[ \t]+FF_([a-zA-Z_]+)[ \t]+([0-9]+)$",
+		dic_name = "ff_flags_values")
+
+	daz_fileobj = gen_initfile("daz.py")
+	gen_define(daz_fileobj, "^#define[ \t]+DAZ_([a-zA-Z_]+)[ \t]+([0-9]+)$",
+		dic_name = "daz_scanned_values",
+		start_pattern = "typedef __u8 rsbac_daz_scanned_t;")
+	gen_define(daz_fileobj, "^#define[ \t]+DAZ_([a-zA-Z_]+)[ \t]+([0-9]+)$",
+		dic_name = "daz_do_scan_values",
+		start_pattern = "typedef __u8 rsbac_daz_do_scan_t;")
+	gen_endfile(daz_fileobj)
 	print "[+] %sdone%s" % (bcolors.OKGREEN, bcolors.ENDC)
 
 def main():

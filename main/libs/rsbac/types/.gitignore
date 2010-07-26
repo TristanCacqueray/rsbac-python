@@ -5,4 +5,7 @@ modules.py
 targets.py
 attrs.py
 errors.py
+auth.py
+daz.py
+ff.py
 *.py.ori
