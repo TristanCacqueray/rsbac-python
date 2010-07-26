@@ -26,6 +26,17 @@
 from rsbac.helpers.lib import *
 from rsbac.types import *
 
+def _attr_value_depack(attr, value_pointer):
+	if isinstance(attr, int):
+		attr = get_attr_name(attr)
+	if attr in ("res_max", "res_min"):
+		res = []
+		for i in value_pointer.contents:
+			res.append(i)
+			if len(res) > 12:
+				return res
+	return value_pointer.contents[0]
+
 def rsbac_get_attr_n(module,		# __u8
 		target,			# __u8
 		name,			# char *
@@ -33,9 +44,7 @@ def rsbac_get_attr_n(module,		# __u8
 		inherit = 0):		# int
 	ta_number = 0
 
-	i = c_int(42)
-	value = pointer(i)
-#	value = create_string_buffer('\000' * 512)
+	value = pointer((c_int * 512)())
 
 	rsys_param = (ta_number, module, target, name, attr, value, inherit)
 #	print "calling rsbac_get_attr_n(%d, %d, %d, %s, %d, %s, %d)" % rsys_param
@@ -49,7 +58,7 @@ def rsbac_get_attr_n(module,		# __u8
 			),
 			ret
 		)
-	return value.contents.value
+	return _attr_value_depack(attr, value)
 
 
 def get(path):
