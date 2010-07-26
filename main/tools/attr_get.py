@@ -32,13 +32,23 @@ import pprint
 from rsbac.types import *
 import rsbac.helpers.attrs
 
+from rsbac.helpers.lib import get_attr_value_name
+
 def main(argv):
 	for path in argv[1:]:
 		if not os.path.exists(path):
 			raise RuntimeError("usage: %s object_path ..." % argv[0])
 		print "=== %s's attributes ===" % path
-		attrs = rsbac.helpers.attrs.get(path)
-		pprint.pprint(attrs, width=20)
+		path_attrs = rsbac.helpers.attrs.get(path)
+		for module,attrs in path_attrs.items():
+			for attr,value in attrs.items():
+				print "%s.%s = %s (%s)" % (
+					module,
+					attr,
+					repr(value),
+					get_attr_value_name(attr, value),
+				)
+#		pprint.pprint(attrs, width=20)
 
 if __name__ == "__main__":
 	import sys

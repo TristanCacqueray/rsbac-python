@@ -26,6 +26,8 @@ Documentation
 """
 from ctypes import *
 
+from rsbac.types import *
+
 try:
 	librsbac = cdll.LoadLibrary("librsbac.so.1")
 except OSError:
@@ -57,16 +59,50 @@ def get_name(dic, key):
 	return dic[key]
 
 def get_error_name(errno):
-	from rsbac.types.errors import errors_names
 	return get_name(errors_names, abs(errno))
 
 def get_attr_name(attr):
-	from rsbac.types.attrs import attrs_names
 	return get_name(attrs_names, attr)
 
 def get_module_name(module):
-	from rsbac.types.modules import modules_names
 	return get_name(modules_names, module)
+
+def get_attr_value_name(attr, value):
+	# Try direct attribute value name, ie auth_may_setuid
+	if attr in named_attr_values.keys():
+		return named_attr_values[attr][value]
+
+	# Try bitfield attribute value names, ie res_*
+	fields = []
+	for attr_name in named_attr_fields.keys():
+		if not attr.startswith(attr_name):
+			continue
+		try:
+			for idx,field_name in named_attr_fields[attr_name].items():
+				fields.append("%s %d" %
+					(
+						field_name,
+						value[idx],
+					)
+				)
+		except IndexError, e:
+			print "get_attr_value_name could not depack %s (%s)" % (
+				attr, repr(value)
+			)
+			return repr(value)
+	if len(fields) > 0:
+		return fields
+
+	# Try on of attribute value name, ie auth_learn
+	if attr in on_off_attr:
+		if value == 1:
+			return "on"
+		return "off"
+
+	# Custom attrs
+#	if attr == "rc_type_fd":
+#		return get_rc_type_name(attr, value)
+	return repr(value)
 
 class RsbacError(Exception):
 	def __init__(self, msg, errno):
