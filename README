@@ -4,6 +4,31 @@ Welcome to the RSBAC python packages directory
 rsbac-python is RSBAC userland tools, but in pure python
 This project is in developpement.
 
+Currently available:
+
+* type generation       *rsbac header to python dictionaries*
+* basic lib helpers     *get_{error,module,attr,attr_value}_name*
+* jail helpers          *rsbac_jail(ip = "0.0.0.0", jail_flags = auto_adjust_inet_any)*
+
+
+Repository layout
+-----------------
+
+master                  code base, without type dictionaries
+rsbac-python-1.4        same code, with type dictionaries generated from rsbac-admin-1.4
+
+
+Quick start
+-----------
+
+To test real quick what this is all about, just:
+	git checkout rsbac-python-1.4
+	export PATH=${PATH}:$(pwd)/main/tools
+	export PYTHONPATH=${PYTHONPATH}:$(pwd)/main/libs
+	rsbac-menu.py /
+
+Also, there is some code use case in main/examples/*.py
+
 
 Directories layout
 ------------------

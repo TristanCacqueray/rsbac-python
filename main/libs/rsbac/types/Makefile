@@ -1,19 +1,14 @@
-ECHO		:= $(shell which echo)
-ifeq ($(ECHO),)
-ECHO		:= echo
-endif
-
 #
 # Nice make. Use make VERBOSE=1 to verbose compilation.
 #
 ifneq ($(VERBOSE), 1)
 .SILENT:
-E = @$(ECHO) -e " "
-else
-E = @:
 endif
+E = @echo -e " "
 
-all:
+all: build
+
+build:
 	$(E) "BUILD\t\t types dictionaries (based on /usr/local/include/rsbac)"
 	@./_gen_types.py /usr/local/include/rsbac
 
