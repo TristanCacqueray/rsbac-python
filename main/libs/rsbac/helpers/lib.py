@@ -58,8 +58,16 @@ def get_name(dic, key):
 		return "UNKNOWN"
 	return dic[key]
 
-def get_error_name(errno):
-	return get_name(errors_names, abs(errno))
+import errno
+def get_error_name(syserrno):
+	syserrno = abs(syserrno)
+	if syserrno < 35:
+		# Try linux errno
+		try:
+			return errno.errorcode[syserrno]
+		except:
+			pass
+	return get_name(errors_names, syserrno)
 
 def get_attr_name(attr):
 	return get_name(attrs_names, attr)
@@ -105,13 +113,13 @@ def get_attr_value_name(attr, value):
 	return repr(value)
 
 class RsbacError(Exception):
-	def __init__(self, msg, errno):
+	def __init__(self, msg, syserrno):
 		self.msg = msg
-		self.errno = errno
+		self.syserrno = syserrno
 	def __str__(self):
-		return "%s, FAILLED. return value = %d (%s)" % (
+		return "%s FAILLED. return value = %d (%s)" % (
 			self.msg,
-			self.errno,
-			get_error_name(self.errno),
+			self.syserrno,
+			get_error_name(self.syserrno),
 		)
 

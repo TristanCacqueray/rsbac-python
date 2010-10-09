@@ -58,7 +58,7 @@ def rsbac_jail(rootdir = None,	# char *
 	ret = librsbac.rsbac_jail(RSBAC_JAIL_VERSION, rootdir, ip_nr, jail_flags, maxcaps,
 				scd_get, scd_modify)
 	if ret < 0:
-		raise RsbacError("rsbac_jail(): rootdir %s, ip %s, jail_flags %d" %
+		raise RsbacError("rsbac_jail(): rootdir %s, ip %s, jail_flags %d:" %
 			(
 				rootdir,
 				ip,
