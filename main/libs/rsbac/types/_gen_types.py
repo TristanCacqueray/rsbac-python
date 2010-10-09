@@ -70,6 +70,7 @@ def get_output(fileobj):
 	else:
 		# or an already opened file if it contains multiple dictionary
 		output = fileobj
+	return output
 
 def gen_define(fileobj, regexp, dic_name, headername = "types.h", start_pattern = None):
 	output = get_output(fileobj)
