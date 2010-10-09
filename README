@@ -11,6 +11,7 @@ Directories layout
 contrib                 external contributions are welcome
 main                    project code sources
 |->/tools               new tools to replace rsbac-admin's commands
+|->/examples            code usage examples
 |->/libs/rsbac          shared code between tools
 |        |->/types      RSBAC generated types for helpers
 |        |->/helpers    librsbac.so wrapper

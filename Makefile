@@ -21,3 +21,5 @@ all:
 clean:
 	$(call E, "Cleaning rsbac type dictionnaries...")
 	@$(MAKE) clean -C main/libs/rsbac/types/
+	$(call E, "Cleaning python objects...")
+	find . -name "*.py[oc]" -exec rm {} \;
