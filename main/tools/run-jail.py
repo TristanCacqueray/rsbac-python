@@ -25,6 +25,8 @@
 It feature: jail configuration files and auto-jailling with symlinks
 """
 
+import os
+
 from rsbac.types import *
 
 ## Possible import technique
@@ -38,9 +40,14 @@ from rsbac.types import *
 ## Recommenced import
 import rsbac.helpers.jail
 
+
 def main(argv):
 	try:
-		rsbac.helpers.jail.rsbac_jail("import test2")
+		if len(argv[1:]) == 0:
+			print "usage: %s prog args"
+			return
+		rsbac.helpers.jail.rsbac_jail()
+		os.execvp(argv[1], argv[1:])
 	except RuntimeError:
 		pass
 
