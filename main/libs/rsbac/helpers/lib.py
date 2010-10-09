@@ -61,7 +61,7 @@ def get_name(dic, key):
 import errno
 def get_error_name(syserrno):
 	syserrno = abs(syserrno)
-	if syserrno < 35:
+	if syserrno < 133:
 		# Try linux errno
 		try:
 			return errno.errorcode[syserrno]

@@ -44,6 +44,7 @@ def rsbac_jail(rootdir = None,	# char *
 			ip_number = [0]*4
 	except ValueError, e:
 		raise RuntimeError("Ip format error: '%s', must be in forme 'A.B.C.D'" % ip)
+	ip_number.reverse()
 	ip_nr = 0
 	for i in xrange(4):
 		ip_nr |= ((ip_number[i] & 0xff) << ((3-i)*8))
