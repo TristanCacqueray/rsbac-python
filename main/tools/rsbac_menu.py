@@ -257,7 +257,8 @@ def main():
 		return -1
 
 	root = Tk()
-	for path in ("../../contrib", "/usr/share", "/usr/local/share"):
+	rsbac_python_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+	for path in ("%s/contrib" % rsbac_python_root, "/usr/share", "/usr/local/share"):
 		try:
 			print "%s/pixmaps/rsbac-logo.gif" % path
 			photo = PhotoImage(file="%s/pixmaps/rsbac-logo.gif" % path)

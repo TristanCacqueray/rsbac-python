@@ -3,10 +3,8 @@
 #
 ifneq ($(VERBOSE), 1)
 .SILENT:
-E = @echo
-else
-E = @:
 endif
+E = @echo -e "[+] "
 
 all:
 	@echo "Welcome to rsbac-python package!"
@@ -18,8 +16,12 @@ all:
 	@echo 
 	@echo "The rsbac-python team - http://github.com/gcm/rsbac-python"
 
+build:
+	$(E) "Building rsbac type dictionaries in main/libs/rsbac/types"
+	@$(MAKE) build -C main/libs/rsbac/types/
+
 clean:
-	$(call E, "Cleaning rsbac type dictionnaries...")
+	$(E) "Cleaning rsbac type dictionaries..."
 	@$(MAKE) clean -C main/libs/rsbac/types/
-	$(call E, "Cleaning python objects...")
+	$(E) "Cleaning python objects..."
 	find . -name "*.py[oc]" -exec rm {} \;
